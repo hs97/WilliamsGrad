@@ -9,7 +9,7 @@ readHonor <- function(data, verifier){
   #initiate storage vector for name and honor
   name <- vector ()
   honor <- vector ()
-  count <- 1
+  count <-  1
   #index the list based on where bachelor of summa, magna, and cum laude are
   index <- grep("Bachelor",data,value=F)
   index <- c(index,length(data))

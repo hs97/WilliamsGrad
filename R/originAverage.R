@@ -9,7 +9,7 @@
 originAverage<- function(honor) {
   #add average from different origins
   aver <- c(mean(with(read(honor, chineseLastName),percent)))
-  origin <-c ("China")
+  origin <-c ("China" )
   aver <- c(aver,mean(with(read(honor, cantoneseLastName),percent)))
   origin <-c (origin, "HK")
   aver <- c(aver,mean(with(read(honor, totalVeri),percent)))
