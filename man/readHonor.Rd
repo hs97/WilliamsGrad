@@ -18,5 +18,5 @@ data frame of \code{ethnic last names} and \code{honors}
 Pick out last names based on reference list, and introduce academic honors
 }
 \examples{
-readHonor(Data2011, chineseLastNames)
+readHonor(DataSummary, chineseLastName)
 }

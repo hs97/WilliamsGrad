@@ -1,10 +1,10 @@
 ---
 title: "Summary"
-author: "Haoyu Sheng 2020'"
+author: 'Haoyu Sheng '
 date: "2/5/2017"
 output:
   pdf_document: default
- 
+  html_document: default
 ---
 
 ```{r, echo=FALSE, include=FALSE}
@@ -40,35 +40,19 @@ The name verifies and years are previously stored through RData and passed into 
 
 readHonor will then return a data.frame as below
 ```{r data}
-readHonor(Data2012,chineseLastName)
+statsummary("summary by count")
 ```
 
 By using read(honor, verifier), we can then utilize the data frame and look at the ratio of students of Asian origins with different Latin honors in comparison to the average ratio of Latin honors among college students. 
 
-```{r summa}
-plot(read("Summa",chineseLastName),  ylab="Percent Summa Cum Laude")
-title(main="Summa Cum Laude Percentage 2002- 2016")
-abline(a=2, b=0)
-```
 
 
 
-```{r magna, echo= FALSE}
-plot(read("Magna",chineseLastName),  ylab="Percent Magna Cum Laude")
-title(main="Magna Cum Laude Percentage 2002- 2016")
-abline(a=15, b=0)
-```
-```{r cum}
-plot(read("Cum",chineseLastName), xlab="Year", ylab="Percent Cum Laude")
-title(main="Cum Laude Percentage 2002- 2016")
-abline(a=35, b=0)
-```
+
+
 
 By attaining the mean value of different origins over 16 years through originAverage(verifier) that takes in country of origin, one is able to compare the average Latin honors with that of students of Asian descend. 
-```{r tenYearAverage}
-plot(originAverage("Cum"), ylab="Average Percent Cum Laude")
-title(main="average Cum Laude 2002- 2016")
-abline(a=35, b=0)
+
 ```
 
 ## Conclusion
