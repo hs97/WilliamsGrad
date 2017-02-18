@@ -1,17 +1,18 @@
 ---
 title: "Summary"
 author: 'Haoyu Sheng '
-date: "2/5/2017"
+date: "2/13/2017"
 output:
   pdf_document: default
   html_document: default
 ---
 
 ```{r, echo=FALSE, include=FALSE}
-library(stringr)
 library(kane2017)
+library(stringr)
 library(ggplot2)
 library(dplyr)
+data(DataSummary, chineseLastName, japaneseLastName,cantoneseLastName)
 ```
 
 ## Abstract
@@ -26,32 +27,65 @@ The data set is further manipulated by comparing each of the last names to a pre
 
 ## Data
 
-The information used to construct the dataset is taken from the Registrar office. The text file is manually converted from the catalog through copying and pasting. 
+The information used to construct the dataset is taken from the Registrar office. The text file is manually converted from the catalog through coying and pasting.Then the text file is converted into Data Frames with a column indicating the year after each student's name. In the end, I compile a data frame "DataSummary.RData" that includes all entries of names from 2002-2016 and the years associated with all the names. 
+
+In addition, the Chinese last name list is compiled through all possible pinyin combinations provided by [linked phrase](http://yabla.com), the Cantonese last name list is provided by [linked phrase](http://wikipedia.org) and the Japanese last names are provided by [linked phrase](http://tekeli.li). 
 
 Though the input are quite concise, since last names and honors are the only things we need, we need to cut down the strings. 
 
 For example, for input: *+Kathleen Malone Palmer, with highest honors in Neuroscience, readHonor will use 
-      unlist(str_split(data[j],","))
-      and 
-      gsub(".* ", "", name)
-      to turn the original string into Palmer.
-After obtaining a list of last names, we then compare the last names with the given list of last names. Now we have chineseLastName, japaneseLastName, cantoneseLastName, and totalVeri, which is the collection of the previous three. 
-The name verifies and years are previously stored through RData and passed into readHonor(data, verifier)
+      
+unlist(str_split(data[j],","))
+      
+      
+gsub(".* ", "", name)
 
+
+      to turn the original string into Palmer.
+      
+After obtaining a list of last names, we then compare the last names with the given list of last names. Now we have chineseLastName, japaneseLastName, cantoneseLastName, and totalVeri, which is the collection of the previous three.
+
+The verifiers and student entries are previously stored through RData and passed into readHonor(data, verifier)
 readHonor will then return a data.frame as below
 ```{r data}
+readHonor(DataSummary, chineseLastName)[1:5,]
+```
+
+## Use readHonor
+
+The information stored within the locally stored RData files of student names and academic honors can be accessed through the **readHonor** method. This function outputs a dataframe containing the name, honor, year, sigmaXi and phiBetaKappa result for all students from 2002 - 2016. 
+
+For easier user interaction, I consolidated the data files into **DataSummary.RData**, which includes all information through out all 15 years. The input files are stored based on individual years as 2002-2016.RData if users want to experience the function by using single year data. 
+ 
+<- data: input data set that contains the list of student names as provided by the registrar office.
+
+<- verifier: input data set that contains the possible last names of a givevn cultural origin. This package includes cantonese, chinese, and japanese
+
+
+## Use statsummary
+
+The function statsummary is used to generate different analytical graphical representation of the honor data collected by **readHonor(data, verifier)**. The function takes in one parameter that indicates the type of analysis desired. 
+
+*> statsummary(type)*
+
+The parameter type has 5 different input values: breakdown, histogram, summary by origin, summary by percentage, summary by account
+```{r breakdown, fig.width=5, fig.height=4}
+statsummary("breakdown")
+```
+```{r histogram, fig.width=5, fig.height=4}
+statsummary("histogram")
+```
+```{r summaryByOrigin, fig.width=5, fig.height=4}
+statsummary("summary by origin")
+```
+
+```{r summaryByPercentage, fig.width=5, fig.height=4}
+statsummary("summary by percentage")
+```
+```{r summaryByCount, fig.width=5, fig.height=4}
 statsummary("summary by count")
 ```
 
-By using read(honor, verifier), we can then utilize the data frame and look at the ratio of students of Asian origins with different Latin honors in comparison to the average ratio of Latin honors among college students. 
-
-
-
-
-
-
-
-By attaining the mean value of different origins over 16 years through originAverage(verifier) that takes in country of origin, one is able to compare the average Latin honors with that of students of Asian descend. 
 
 ```
 
