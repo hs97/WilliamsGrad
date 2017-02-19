@@ -16,5 +16,4 @@ Suggests:
 VignetteBuilder: knitr
 Imports: ggplot2,
     stringr,
-    dplyr,
-    kane2017
+    dplyr
