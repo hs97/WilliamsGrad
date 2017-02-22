@@ -8,12 +8,11 @@ Description: this package allows users to check the students’ cultural origins
     Use four spaces when indenting paragraphs within the Description.
 License: GPL-2
 Encoding: UTF-8
-LazyData: true
+LazyData: TRUE
 RoxygenNote: 6.0.1.9000
 Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
 Imports: ggplot2,
-    stringr,
-    dplyr
+    	stringr

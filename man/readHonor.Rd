@@ -2,21 +2,22 @@
 % Please edit documentation in R/readHonor.R
 \name{readHonor}
 \alias{readHonor}
-\title{Pick out last names based on reference list, and introduce academic honors}
+\title{readHonor()}
 \usage{
 readHonor(data, verifier)
 }
 \arguments{
-\item{data}{list of graduation names and honors}
+\item{data}{data frame of columns name and year}
 
 \item{verifier}{A list of last names}
 }
 \value{
-data frame of \code{ethnic last names} and \code{honors}
+data frame of \code{ethnic last names}, \code{honors} and sigmaXi and phiBetaKappa status
 }
 \description{
-Pick out last names based on reference list, and introduce academic honors
+Pick out Asian last names based on reference list, and check for their academic honors
+Return a data frame that has all the Asian last names and honors.
 }
 \examples{
-readHonor(DataSummary, chineseLastName)
+readHonor(students, chineseLastName)
 }

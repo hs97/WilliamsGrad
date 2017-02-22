@@ -2,19 +2,17 @@
 % Please edit documentation in R/honorStats.R
 \name{honorStats}
 \alias{honorStats}
-\title{create a simple count list of academic honors}
+\title{honorStats()}
 \usage{
 honorStats(honorList)
 }
 \arguments{
-\item{honorList}{data frame return by readHonor()}
+\item{honorList}{data frame returned by readHonor() that contains a data frame of asian last names, their honors, their sigmaXi and phiBetaKappa status(TRUE/ FALSE)}
 }
 \value{
 data frame of \code{year} \code{total} \code{summa}\code{magna}\code{cum}\code{sigmaXi} and \code{phiBetaKappa}
 }
 \description{
-create a simple count list of academic honors
-}
-\examples{
-honorStats(readHonor(DataSummary, chineseLastName) )
+create a simple count list of academic honors of all the asian students from 2002-2016,
+including the number of each honor
 }

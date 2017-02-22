@@ -1,11 +1,13 @@
-#' Pick out last names based on reference list, and introduce academic honors
-#'
-#' @param data list of graduation names and honors
+#' @title readHonor()
+#' @description
+#' Pick out Asian last names based on reference list, and check for their academic honors
+#' Return a data frame that has all the Asian last names and honors.
+#' @param data data frame of columns name and year
 #' @param verifier A list of last names
-#' @return data frame of \code{ethnic last names} and \code{honors}
+#' @return data frame of \code{ethnic last names}, \code{honors} and sigmaXi and phiBetaKappa status
 #' @import stringr
 #' @examples
-#' readHonor(DataSummary, chineseLastName)
+#' readHonor(students, chineseLastName)
 #' @export
 
 readHonor <- function(data, verifier){

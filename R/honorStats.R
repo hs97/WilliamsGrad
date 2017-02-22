@@ -1,9 +1,12 @@
-#' create a simple count list of academic honors
+#' @title honorStats()
+#' @description
+#' create a simple count list of academic honors of all the asian students from 2002-2016,
+#' including the number of each honor
 #'
-#' @param honorList data frame return by readHonor()
+#' @param honorList data frame returned by readHonor() that contains a data frame of asian last names, their honors, their sigmaXi and phiBetaKappa status(TRUE/ FALSE)
 #' @return data frame of \code{year} \code{total} \code{summa}\code{magna}\code{cum}\code{sigmaXi} and \code{phiBetaKappa}
-#' @examples
-#' honorStats(readHonor(DataSummary, chineseLastName) )
+#' @example
+#' honorStats(readHonor(students,chineseLastName))
 #' @export
 
 honorStats <- function(honorList) {

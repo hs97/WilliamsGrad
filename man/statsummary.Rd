@@ -2,18 +2,30 @@
 % Please edit documentation in R/statsummary.R
 \name{statsummary}
 \alias{statsummary}
-\title{provides different ways of evaluating the given data set}
+\title{statSummary()}
 \usage{
 statsummary(type)
 }
 \arguments{
-\item{type}{types of analytical representations, including: summay by count, summary by origin, breakdown, histogram, summary by percentage}
+\item{type}{types of analytical representations, including: summay by count, summary by origin, breakdown, histogram, summary by percentage,
+OR cum, OR sigma, OR phi, OR all, and Overall honor ratio.}
 }
 \value{
-ggplot of graphs
+ggplot of graphical analysis according to the given param.
 }
 \description{
-provides different ways of evaluating the given data set
+statsummary provides different ways of evaluating the given data set.
+Summary by count allows for a visualization of number of asian students
+each year broken down by honors. Summary by origin looks at the number
+of Asian students categorized by origins, breakdown gives a detailed
+breakdown of number of asian students each year with the number of honors,
+summary by percentage illustrates the percentage of honors attained by
+Asian students each year, histogram gives a regression plot of Asian student
+count throughout the years.
+
+It also offers useful tools to analyze the ratio. OR cum allows for the examination
+of cum ratios from 2002 to 2016 while OR sigma and OR phi looks at sigmaXi and
+phiBetaKappa respectively.
 }
 \examples{
 statsummary("breakdown")
