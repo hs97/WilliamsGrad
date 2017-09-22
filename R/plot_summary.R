@@ -21,7 +21,7 @@
       theme(legend.position = "bottom",
             plot.margin = margin(5, 25, 0, 25))
     else if (type == "ratio")
-      summarize_ratio %>%
+      x %>% summarize_ratio %>%
       filter(value != "None")  %>%
       mutate(set = "Ratio Indicator") %>%
       ggplot(aes(x = year, y = ratio, group = origin, fill = origin)) +
