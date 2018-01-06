@@ -2,23 +2,19 @@
 % Please edit documentation in R/read_honor.R
 \name{read_honor}
 \alias{read_honor}
-\title{This function process the student info data frame and mutate their academic honors}
+\title{This method reads honors such as Summa Cum Laude, Magna Cum Laude, and Phi Beta
+Kappa.}
 \usage{
 read_honor(x)
 }
 \arguments{
-\item{x}{the dataframe containing all student info}
+\item{x}{a dataframe including rows \code{name} and others}
 }
 \value{
-a dataframe now containing columns \code{name}, \code{year}, \code{honor},
-and \code{value}
+a dataframe including rows \code{name} \code{phi_beta_kappa} \code{sigma_xi}
+\code{summa} \code{magna} \code{cum} and others
 }
 \description{
-We determine whether a student is part of phi beta kappa or sigma xi by detecting
-if the name contains "*" or "+"
-}
-\details{
-We also attain a list of indices from rows saying "Bachelor of Arts, Summa Cum Laude"
-and find out their places in the data frame, and mutate the data frame based on where
-an entry belongs in the list of indices. Then apply %% 4.
+This method reads honors such as Summa Cum Laude, Magna Cum Laude, and Phi Beta
+Kappa.
 }
