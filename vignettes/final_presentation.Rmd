@@ -1,0 +1,169 @@
+---
+title: 'The Study of ''Other'': How Athletes and Students of Different Ethnicities
+  Perform Academically at Williams'
+author: "Haoyu Sheng"
+date: "December 7, 2017"
+output:
+  slidy_presentation: 
+    incremental: true
+---
+  
+```{r setup, echo=FALSE, include=FALSE}
+require(tidyverse) #you may need to run install.packages('tidyverse') first, only once on a machine
+require(dplyr)
+require(lubridate) #same goes for any new package
+require(rvest)
+require(stringr)
+require(knitr)
+require(ggplot2)
+load("../data/honors.RData")
+load(file = "../data/athletic_summary.RData")
+require(gridExtra)
+load("../data/students.RData")
+load("../data/roster.RData")
+load("../data/classified.RData")
+load(file = "../data/ethnic_summary.RData")
+
+knitr::opts_chunk$set(tidy=TRUE, message=FALSE)
+```
+
+
+#Motivation and Approaches
+
+- **Motivation**
+
+    - Informal Response to the article : *What Does it Mean to be the Best?: An Alum Considers the Relative Importance of Admission Criteria*
+
+    - Personal Interest in seeing how students of Asian origins are performing academically
+
+- **Approach**
+
+    - Attain information from graduation catalog and team rosters
+
+    - Use the `wru` package to identify someone's ethnicity through surname analysis
+
+    - Compare the percentage of students attaining `cum laude` among different demographics. 
+
+----------------------
+
+#Disclaimers and Limitations
+
+- Limitations of the Bayesian surname analysis. Inability to account for names such as "Lee"
+- Loss of information during transition. For example: a student named Andrew might be recorded as Andy on the team roster
+- Inability to account for walk-ons.
+- Graduation honors are not the only metrics for a student's importance and contribution to the college!
+
+-----------------------
+
+#Data 
+
+- Utilizes two datasets: **student** and **roster**
+- The `students` dataset comes from the Williams College catalog archive, containing graduation data from the class of 2003 to the class of 2015
+- Has `r nrow(students)` entries
+
+    ```{r, echo = FALSE}
+    head(students, 3) %>%
+      mutate(name = c('*Amy Eph, with highest honor in Economics', '*Chris Somebody', '*Lauren Nobody')) %>%
+      kable()
+    ```
+
+- The `roster` dataset comes forom Williams College athletic archives, including rosters from the class of 2002 to the class of 2015 and teams such as soccer, football, and cross country
+- Has `r nrow(roster)` entries
+    ```{r, echo = FALSE}
+    head(roster, 3) %>%
+      mutate(name = c('John Lax', 'Ryan Tennis', 'Will Football')) %>%
+      kable()
+    ```
+
+
+----------
+
+#Data Tidying and Manuvering
+
+- Join the two initial dataframes
+- Read honors based on the names
+- Analyze ethnicities based on surnames
+- summarize ratio for each subgroup for each year
+- 
+    ```{r, echo = FALSE}
+    kable(head(ethnic_summary, 3))
+    ```
+    
+- A graphical summary of the data
+    
+    ```{r, echo=FALSE, message = FALSE, warning = FALSE}
+    p1 <- ethnic_summary %>%
+      ggplot(aes(x = year, y = ratio, color = race)) + geom_point() + theme_bw() 
+    p2 <- honors %>%
+      mutate(latin = ifelse(summa == 1 | magna == 1 | cum == 1, 1, 0)) %>% 
+      group_by(year, team) %>%
+      summarize(ratio = sum(latin) / length(name)) %>%
+      filter(team == "Women's Cross Country" |  team == "Men's Soccer" | team == "football" | is.na(team)) %>%
+      ggplot(aes(x = year, y = ratio, color = team)) + geom_point() + theme_bw() 
+    grid.arrange(p1, p2)
+    ```
+
+----------------------
+
+#Two proportion z-test
+
+-
+```{r}
+hispanic <- classified %>%
+  filter(hispanic == 1) %>%
+  group_by(latin) %>%
+  summarize(value = length(name))
+non_hispanic = classified %>%
+  filter(hispanic == 0) %>%
+  group_by(latin) %>%
+  summarize(value = length(name))
+prop.test(c(filter(hispanic, latin == 1)$value, 
+            filter(non_hispanic, latin == 1)$value), 
+          c(sum(hispanic$value), sum(non_hispanic$value)))
+```
+- Independence
+- Success/Failure Condition
+- 10% Condition
+
+
+---------------------------
+
+#T tests
+
+```{r}
+athlete <- athletic_summary %>%
+  filter(athlete == 1) 
+non_athlete <- athletic_summary %>%
+  filter(athlete == 0) 
+t.test(athlete$ratio, non_athlete$ratio)
+```
+
+- Conditions
+- Nearly Normal: 
+    ```{r, echo = FALSE}
+    p1 <- ggplot(athlete, aes(x = ratio, fill = "athlete")) + 
+      geom_histogram(bins = 6, aes(y = ..density..)) + theme_bw() + 
+      stat_function(fun = dnorm, 
+                    args = c(mean = mean(athlete$ratio), 
+                             sd = sd(athlete$ratio)))
+    p2 <- ggplot(non_athlete, aes(x = ratio, fill = "non-athlete")) + 
+      geom_histogram(bins = 6, aes(y = ..density..)) + theme_bw() +
+      stat_function(fun = dnorm, 
+                    args = c(mean = mean(non_athlete$ratio), 
+                             sd = sd(non_athlete$ratio)))
+    grid.arrange(p1, p2, nrow = 1)
+    ```
+- Independence
+
+
+-------------------------
+
+#Thoughts and Potential Future Work
+
+- Different subgroups of students might have different focuses
+- Interesting data for the Davis center
+- A foundation for a study on the relationship between socioeconomic status and thriving academically at college
+- Compare results across colleges to examine if our institution is doing its best to support students of various demographics
+
+
+

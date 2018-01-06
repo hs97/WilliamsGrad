@@ -7,16 +7,12 @@
 #' @return a data frame indicating every student's
 #' potential cultural origin
 #'
+#' @import stringr
+#' @import wru
 #' @export
 
-analyze_names <- function(x) {
-
-  ## load last name data
-
- # data(last_names, package = "kane2017")
-
+analyze_surnames <- function(x) {
   x %>%
-
     ## separate the last name from name
     ## by eliminating anything after a
     ## comma and take the substring before
@@ -25,14 +21,9 @@ analyze_names <- function(x) {
     mutate(name = as.character(name)) %>%
     rowwise %>%
     mutate(name = strsplit(name, ",")[[1]][1]) %>%
-    mutate(last_name = tolower(gsub(".* ", "", name))) %>%
-
-    ## joining the last_names dataset, which contains
-    ## last_name and origin to define everyone's origin
-
-    left_join(last_names, by = c("last_name")) %>%
-    mutate(origin = ifelse(is.na(origin), "non-Asian", origin)) %>%
-    ungroup
-
+    mutate(surname = tolower(gsub(".* ", "", name))) %>%
+    predict_race(surname.only = T) %>%
+    mutate(asian = round(pred.asi),
+           hispanic = round(pred.his)) %>%
+    select(-starts_with("pred"))
 }
-

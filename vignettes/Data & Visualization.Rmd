@@ -1,0 +1,150 @@
+---
+title: "Data and Visualization"
+author: "Haoyu Sheng"
+date: "11/27/2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(knitr)
+library(tidyr)
+library(ggplot2)
+library(kane2017)
+```
+
+## Data
+
+```{r, message = FALSE}
+load(file = '../data/students.RData')
+load(file = '../data/roster.RData')
+load(file = '../data/joined.RData')
+load(file = '../data/honors.RData')
+load(file = '../data/asian_classified.RData')
+```
+
+This project utilizes two datasets: `students` and `roster`. 
+
+The `students` dataset comes from the Williams College catalog archive. It contains graduation data from the class of 2001 to the class of 2015. This dataset has `r nrow(students)` entries and has columns `name` and `year`. 
+
+```{r, echo = FALSE}
+kable(head(students))
+```
+
+The `roster` dataset comes from Williams College athletic archives. It currently contains data for **Men's Lacrosse**, **Football**, **Baseball**, **Softball**, **Men's Cross Country**, **Men's Basketball**, **Men's Swim and Dive**, and **Women's Swim and Dive** from the class of 2002 to the class of 2015. This dataset has `r nrow(roster)` entries with columns indicating the students' `name`, `year`, and `team`. 
+
+```{r, echo = FALSE}
+kable(head(roster))
+```
+
+Now, we will need to join these two data frames together to proceed with further analysis. However, when I am joining the dataset, I found out that the `roster` dataset only has a student's first and last name, while the graduation catalog includes first, middle, and last name. In addition, a student's first name can often be abbreviated(Andrew to Andy for example). Therefore, we use the following partial string matching followed by data frame joining and data tidying.  
+
+```{r, echo = FALSE}
+kable(head(joined))
+```
+
+After some data handling, we can identify a student's honor by looking at the prefixes in their name. For example, the character * indicates phi beta kappa. 
+
+```{r, echo = FALSE}
+set.seed(11)
+kable(honors[sample(nrow(honors), 6), ])
+```
+
+We can then apply the last name analysis I built for last names of East Asian origins. 
+
+```{r, echo = FALSE}
+set.seed(88)
+kable(asian_classified[sample(nrow(asian_classified), 6), ])
+```
+
+We then summarize the above data by counting the number of cases for each academic honor within each origin group, and dividing the number by the total number of academic honor by that group, we can attain the following dataframe:
+
+```{r, echo = FALSE}
+kable(head(summarize_ratio(asian_classified)))
+```
+
+This will be the data frame we will be ultimately working with. In the dataframe, each case represents a cultral origin with a particular honor in a particular year. The `honor` variable indicates what type of honor the student has, while `value` gives a more specific description of that honor. At the end, the `team` variable will also become part of this dataframe. 
+
+## Visualization
+
+We can take a look at the distribution of ratio for Chinese students with honors
+
+```{r}
+honor_names <- c(
+  "cum" = "Cum Laude",
+  "magna" = "Magna",
+  "summa" = "Summa",
+  "phi_beta_kappa" = "PBK",
+  "sigma_xi" = "Sigma Xi"
+)
+chinese <- asian_classified %>%
+  summarize_ratio %>%
+  filter(origin == 'Chinese', value == 'cum')
+ggplot(chinese, aes(x = ratio, fill = origin)) +
+  theme_bw(base_size = 16) +
+  facet_grid(value~origin, scales = "free", labeller = labeller(value = honor_names)) +
+  geom_histogram(bins = 8) 
+```
+
+This graph illustrates the distribution of cum laude ratios(not counting summa/magna) for students of Chinese origin. The distribution is triimodal, with a highest mode at around 0.3.The distribution is also asymetrical, with a heavier distribution to the right of the graph. 
+
+We should now look at a brief summary:
+
+```{r}
+summary(chinese$ratio)
+```
+
+We can see that the mean of the ratio of cum laude for students of Chinese origin is around 21%, while on average (35% - 2% - 15% = 18%) of the students have cum laude honor. 
+
+We can also take a look at the distribution of the count of students of Chinese origin. 
+
+```{r}
+count <- asian_classified %>%
+  summarize_ratio %>%
+  filter(origin == 'Chinese') %>%
+  group_by(year) %>%
+  summarize(count = sum(count))
+ggplot(count, aes(x = count, fill = 'red')) +
+  geom_histogram(bins = 5) + theme_bw()
+```
+
+This histogram captures the distribution of the number of Chinese students. The distribution is unimodal, with a center of roughly 45. The graph is right-skewed. The IQR of the graph is `r IQR(count$count)`
+
+We can now summarize the data: 
+
+```{r}
+summary(count$count)
+```
+
+This indicates that on average, there are 57 Chinese students every year, which is around 10% of the Williams population. 
+
+We can also look at take a look at the distribution of football team's population. 
+
+```{r, warning = FALSE}
+football <- joined %>%
+  filter(team == "football") %>%
+  group_by(year) %>%
+  summarize(team_count = length(name))
+ggplot(football, aes(x = team_count, fill = 'red')) +
+  geom_histogram(bins = 5) + theme_bw()
+```
+
+The distribution is bimodal, with a gap at 12. The range is `r range(football$team_count)`. However, there are some parsing erro when we are splitting the names into first names and last names, the data points here are only from 2010 to 2015. We will complete the dataframe and will therefore acquire more data points. 
+
+We can also show the relationship between time and latin honors. 
+
+For example, we can look at how the ratio of Chinese Cum Laude changes over time.
+
+```{r, warning = FALSE, message = FALSE}
+asian_classified %>%
+  summarize_ratio %>%
+  filter(origin == "Chinese", value == 'cum') %>%
+  ggplot(aes(x = year, y = ratio)) + geom_point() + geom_smooth() + theme_bw()
+``` 
+
+I am curious in seeing that, with possible changes in admission standards, whether Chinese students will do better academically. Through this plot, I am able to explore whether there is a sudden increase or a gradual trend of students performing better academically. However, even with a slightly upward trend and an average that is higher than that of the college, the performances of Chinese students have been mostly fluctuating. 
+
+
+
+
